@@ -26,7 +26,7 @@ const CreatePostBox = ({ onPostCreated }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!content.trim()) return;
+    if (!content.trim() && !imageFile) return;
     setError('');
     setPosting(true);
     try {
@@ -88,7 +88,7 @@ const CreatePostBox = ({ onPostCreated }) => {
             </label>
             <button
               type="submit"
-              disabled={posting || !content.trim()}
+              disabled={posting || (!content.trim() && !imageFile)}
               className="rounded-full bg-linkedin px-5 py-1.5 text-sm font-semibold text-white hover:bg-linkedin-dark disabled:opacity-60"
             >
               {posting ? 'Posting...' : 'Post'}

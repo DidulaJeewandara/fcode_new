@@ -188,7 +188,7 @@ const PostCard = ({ post, onUpdated, onDeleted }) => {
           </div>
         </div>
       ) : (
-        <p className="mt-3 whitespace-pre-line text-sm text-gray-800">{post.content}</p>
+        post.content && <p className="mt-3 whitespace-pre-line text-sm text-gray-800">{post.content}</p>
       )}
 
       {post.imageUrl && !isEditing && (

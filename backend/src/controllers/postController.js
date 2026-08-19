@@ -90,17 +90,20 @@ const getPostById = async (req, res, next) => {
 const createPost = async (req, res, next) => {
   try {
     const { content } = req.body;
-    if (!isNonEmptyString(content)) {
-      return res.status(400).json({ message: 'Post content is required' });
+    const hasContent = isNonEmptyString(content);
+    const hasImage = Boolean(req.file);
+
+    if (!hasContent && !hasImage) {
+      return res.status(400).json({ message: 'Post must include text or an image' });
     }
-    if (content.trim().length > MAX_CONTENT_LENGTH) {
+    if (hasContent && content.trim().length > MAX_CONTENT_LENGTH) {
       return res.status(400).json({ message: `Post content must be under ${MAX_CONTENT_LENGTH} characters` });
     }
 
-    const imageUrl = req.file ? `/uploads/post-images/${req.file.filename}` : null;
+    const imageUrl = hasImage ? `/uploads/post-images/${req.file.filename}` : null;
 
     const post = await prisma.post.create({
-      data: { content: content.trim(), imageUrl, authorId: req.user.id },
+      data: { content: hasContent ? content.trim() : '', imageUrl, authorId: req.user.id },
       include: {
         author: { select: authorSelect },
         _count: { select: { likes: true, comments: true } },
