@@ -141,6 +141,9 @@ const sendMessage = async (req, res, next) => {
     if (!content || !content.trim()) {
       return res.status(400).json({ message: 'Message content is required' });
     }
+    if (content.trim().length > 2000) {
+      return res.status(400).json({ message: 'Message must be under 2000 characters' });
+    }
 
     const message = await prisma.message.create({
       data: { content: content.trim(), senderId: req.user.id, conversationId },

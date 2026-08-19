@@ -94,11 +94,12 @@ model Follow {
 }
 
 model Post {
-  id        Int      @id @default(autoincrement())
-  content   String
-  imageUrl  String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id         Int      @id @default(autoincrement())
+  content    String
+  imageUrl   String?
+  shareCount Int      @default(0)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 
   authorId Int
   author   User @relation(fields: [authorId], references: [id], onDelete: Cascade)

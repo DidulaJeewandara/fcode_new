@@ -12,11 +12,11 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="flex items-center justify-between bg-white px-6 py-3 shadow-sm">
+    <nav className="flex flex-wrap items-center justify-between gap-y-2 bg-white px-4 py-3 shadow-sm sm:px-6">
       <Link to="/" className="text-xl font-bold text-linkedin">
         LinkedClone
       </Link>
-      <div className="flex items-center gap-4">
+      <div className="flex flex-wrap items-center gap-3 sm:gap-4">
         {user ? (
           <>
             <Link to="/search" className="text-sm font-medium text-gray-700 hover:text-linkedin">
@@ -29,7 +29,10 @@ const Navbar = () => {
               Messages
             </Link>
             <NotificationDropdown />
-            <Link to={`/profile/${user.id}`} className="text-sm font-medium text-gray-700 hover:text-linkedin">
+            <Link
+              to={`/profile/${user.id}`}
+              className="max-w-[8rem] truncate text-sm font-medium text-gray-700 hover:text-linkedin"
+            >
               Hi, {user.name}
             </Link>
             <button

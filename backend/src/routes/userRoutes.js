@@ -3,7 +3,7 @@ const {
   listUsers,
   getUserProfile,
   updateMyProfile,
-  uploadProfilePicture,
+  uploadProfilePicture: handleProfilePictureUpload,
   getConnectionStatus,
 } = require('../controllers/userController');
 const { addSkill, deleteSkill } = require('../controllers/skillController');
@@ -12,7 +12,7 @@ const { addExperience, deleteExperience } = require('../controllers/experienceCo
 const { followUser, unfollowUser, getFollowers, getFollowing } = require('../controllers/followController');
 const { searchUsers } = require('../controllers/searchController');
 const authMiddleware = require('../middleware/auth');
-const upload = require('../middleware/upload');
+const { uploadProfilePicture } = require('../middleware/upload');
 
 const router = express.Router();
 
@@ -22,7 +22,7 @@ router.get('/', listUsers);
 router.get('/search', searchUsers);
 
 router.put('/me', updateMyProfile);
-router.post('/me/profile-picture', upload.single('profilePicture'), uploadProfilePicture);
+router.post('/me/profile-picture', uploadProfilePicture.single('profilePicture'), handleProfilePictureUpload);
 
 router.post('/me/skills', addSkill);
 router.delete('/me/skills/:skillId', deleteSkill);

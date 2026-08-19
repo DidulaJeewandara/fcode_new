@@ -1,11 +1,23 @@
-# Setup & Run Instructions
+# LinkedIn Clone MVP — Instructions
 
-## 1. Prerequisites
+## 1. Project Overview
+
+A LinkedIn-style social/professional networking app built for a time-limited coding competition. It covers authentication, editable profiles (skills/education/experience), a connection & follow system with live status, a post feed (create/edit/delete, images, likes, comments, share), notifications, and basic 1:1 messaging — all as a REST API with a React frontend.
+
+## 2. Technology Stack
+
+**Frontend**: React, Vite, JavaScript, Tailwind CSS, React Router, Axios
+**Backend**: Node.js, Express.js, JavaScript
+**Database**: SQLite, accessed via Prisma ORM
+**Auth**: JWT (jsonwebtoken) + bcrypt password hashing
+**Uploads**: Multer (local disk storage, served statically)
+
+## 3. Prerequisites
 
 - Node.js v18+ and npm v9+
-- No external database needed — SQLite runs as a local file.
+- No external database needed — SQLite runs as a local file, no separate DB server to install.
 
-## 2. Installation
+## 4. Installation Commands
 
 From the project root:
 
@@ -17,19 +29,49 @@ cd ../frontend
 npm install
 ```
 
-## 3. Database Setup
+## 5. Environment Variables
+
+Both apps read config from a `.env` file. Example files are provided — copy them if `.env` doesn't already exist:
+
+**`backend/.env`** (copy from `backend/.env.example`)
+```
+DATABASE_URL="file:./dev.db"
+JWT_SECRET="change_this_secret"
+JWT_EXPIRES_IN="7d"
+PORT=5000
+```
+
+**`frontend/.env`** (copy from `frontend/.env.example`)
+```
+VITE_API_BASE_URL=http://localhost:5000/api
+```
+
+> Both `backend/.env` and `frontend/.env` are already present in this project for convenience — you only need to copy the `.env.example` files if you ever delete them or start fresh.
+
+## 6. Database Setup
 
 From `backend/`:
 
 ```bash
-npx prisma migrate dev --name init
+npx prisma migrate dev
 npx prisma generate
+```
+
+This creates `backend/prisma/dev.db` and applies all migrations (users, skills, education, experience, connections, follows, posts, likes, comments, notifications, conversations, messages).
+
+## 7. Seed Database
+
+From `backend/`:
+
+```bash
 npm run seed
 ```
 
-This creates `backend/prisma/dev.db` and seeds 3 demo users.
+Creates 3 demo users with profiles (skills/education/experience), an accepted connection, a pending connection request, follows, 3 posts with likes/comments, matching notifications, and a sample conversation — so the app looks populated on first login.
 
-## 4. Start the Backend
+> To fully reset to this clean seeded state at any time: `npx prisma migrate reset --force` (re-applies all migrations and re-seeds automatically).
+
+## 8. Start the Backend
 
 From `backend/`:
 
@@ -37,9 +79,9 @@ From `backend/`:
 npm run dev
 ```
 
-Runs on **http://localhost:5000**.
+Runs on **http://localhost:5000**. Uploaded images are served statically from `http://localhost:5000/uploads/...`.
 
-## 5. Start the Frontend
+## 9. Start the Frontend
 
 From `frontend/` (in a separate terminal):
 
@@ -49,7 +91,7 @@ npm run dev
 
 Runs on **http://localhost:5173**.
 
-## 6. Demo Login Credentials
+## 10. Demo Accounts
 
 | Email | Password |
 |---|---|
@@ -57,126 +99,101 @@ Runs on **http://localhost:5173**.
 | bob@example.com | password123 |
 | carol@example.com | password123 |
 
-## 7. API Base URL
+Alice and Bob are already connected; Carol has a pending connection request to Alice, ready to Accept/Reject on first login.
 
-`http://localhost:5000/api`
+## 11. API Overview
 
-Configured in `frontend/.env` as `VITE_API_BASE_URL`. Uploaded files (profile pictures) are served statically from `http://localhost:5000/uploads/...`.
-
-## 8. Basic Testing Instructions
-
-### Auth flow
-
-1. Open http://localhost:5173 — you should be redirected to `/login`.
-2. Log in with one of the demo credentials above, or register a new account at `/register`.
-3. On success you land on the dashboard showing your name, headline, and a "People you may know" list.
-4. Click **Logout** to clear the session and return to `/login`.
-
-### Profile flow
-
-1. Click your name in the navbar (or the welcome card on the dashboard) to open your own profile at `/profile/:id`.
-2. Click **Edit profile** to go to `/profile/edit`. Update name, headline, about, and location, then **Save changes**.
-3. Use **Change photo** to upload a profile picture (multer stores it under `backend/uploads/profile-pictures/`, served at `/uploads/profile-pictures/<file>`).
-4. Add/remove **Skills** (tag chips with an add form), **Education**, and **Experience** entries from your own profile — the add/delete controls only appear on your own profile.
-5. From the dashboard, click another user in "People you may know" to view their profile. Edit/add/delete controls are hidden on other users' profiles, confirming read-only access.
-6. Connection count is now live (post count stays `0` until posts are implemented).
-
-### Connections, follow & search flow
-
-1. Go to **Search** in the navbar, search by name, headline, or skill (e.g. `designer`, `react`). Results are paginated 10 per page — use Previous/Next.
-2. On a search result or another user's profile, the relationship button reflects live state:
-   - **Connect** — no relationship yet → sends a request.
-   - **Pending** — you already sent a request (disabled).
-   - **Accept** / **Reject** — shown when the other user sent *you* a request.
-   - **Connected** — request accepted; click it to remove the connection.
-   - A separate **Follow** / **Unfollow** button is always available independent of connection status.
-   - You never see a Connect/Follow button on your own profile.
-3. Go to **My Network** in the navbar to see two tabs: **My Connections** (accepted, with a Remove button) and **Requests** (pending incoming, with Accept/Reject).
-4. Try it with the seeded users: log in as Alice, search for "Bob", click **Connect**. Log out, log in as Bob, open **My Network → Requests**, click **Accept**. Log back in as Alice — Bob now shows **Connected** and appears under **My Connections**.
-
-### Notifications flow
-
-1. The bell icon in the navbar shows an unread-count badge and opens a dropdown with your latest notifications. Unread ones are highlighted; clicking one marks it read. **Mark all as read** clears the badge. **View all notifications** opens the full `/notifications` page (paginated, 20 per page).
-2. Notifications are created automatically for: someone sending you a connection request, someone accepting your connection request, someone liking your post, someone commenting on your post. You never get a notification for liking/commenting on your own post.
-3. Quick test with seeded users: log in as Alice, send Bob a connection request → log in as Bob, see the "Alice Johnson sent you a connection request" notification in the bell dropdown → Accept it from **My Network → Requests** → log back in as Alice and see "Bob Smith accepted your connection request".
-4. Post likes/comments have no feed UI yet, but can be triggered via the API to see notifications fire (see endpoints below).
-
-### Messaging flow
-
-1. Open **Messages** in the navbar, or click **Message** on another user's profile (this starts/opens a conversation with them).
-2. The left panel lists your conversations; select one to load its message history on the right. Type in the input and click **Send**.
-3. Users can only read or send messages in conversations they are a participant of (enforced server-side, returns 403 otherwise).
-4. Quick test: log in as Alice, go to Bob's profile, click **Message**, send "Hi Bob!". Log in as Bob, open **Messages**, see Alice's conversation and reply.
-
-### API endpoints (all under `/api`, all require `Authorization: Bearer <token>` unless noted)
+All endpoints are under `http://localhost:5000/api`. Except auth register/login, every route requires `Authorization: Bearer <token>`.
 
 **Auth**
-- `POST /auth/register` — body: `{ "name", "email", "password" }`
-- `POST /auth/login` — body: `{ "email", "password" }`
-- `GET /auth/me`
+- `POST /auth/register`, `POST /auth/login`, `GET /auth/me`
 
 **Users / Profile**
-- `GET /users` — list all other users (id, name, headline, profilePicture)
-- `GET /users/search?q=&page=1&limit=10` — search by name, headline, or skill name; paginated, returns `{ users, page, limit, total, totalPages }`
-- `GET /users/:id` — full profile: user fields + skills + education + experience + connectionCount + postCount
-- `PUT /users/me` — update own profile — body: any of `{ "name", "headline", "bio", "location" }`
-- `POST /users/me/profile-picture` — multipart form field `profilePicture` (image, max 5MB)
-- `GET /users/:userId/connection-status` — returns `{ status: "NOT_CONNECTED" | "PENDING" | "CONNECTED" | "SELF", ... }` (PENDING also includes `direction` + `requestId`; CONNECTED includes `connectionId`)
-
-**Follow** (independent of connections)
-- `POST /users/:userId/follow`
-- `DELETE /users/:userId/follow`
-- `GET /users/:userId/followers`
-- `GET /users/:userId/following`
+- `GET /users` — list other users
+- `GET /users/search?q=&page=&limit=` — search by name/headline/skill, paginated
+- `GET /users/:id` — full profile (skills, education, experience, connectionCount, postCount)
+- `PUT /users/me` — edit own profile
+- `POST /users/me/profile-picture` — multipart image upload
+- `GET /users/:userId/connection-status` — `NOT_CONNECTED | PENDING | CONNECTED | SELF`
+- `POST/DELETE /users/:userId/follow`, `GET /users/:userId/followers`, `GET /users/:userId/following`
+- Skills: `POST/DELETE /users/me/skills[/:skillId]`
+- Education: `POST/DELETE /users/me/education[/:educationId]`
+- Experience: `POST/DELETE /users/me/experience[/:experienceId]`
 
 **Connections**
-- `POST /connections/:userId` — send a request (409 if already pending/connected, 400 if targeting yourself)
-- `PATCH /connections/:requestId/accept` — only the receiver can accept
-- `PATCH /connections/:requestId/reject` — only the receiver can reject
-- `DELETE /connections/:userId` — remove an existing accepted connection
-- `GET /connections` — the current user's accepted connections
-- `GET /connections/requests` — pending requests sent *to* the current user
+- `POST /connections/:userId`, `PATCH /connections/:requestId/accept`, `PATCH /connections/:requestId/reject`, `DELETE /connections/:userId`, `GET /connections`, `GET /connections/requests`
 
-**Skills**
-- `POST /users/me/skills` — body: `{ "name" }`
-- `DELETE /users/me/skills/:skillId` — only the owner can delete (403 otherwise)
-
-**Education**
-- `POST /users/me/education` — body: `{ "school", "degree", "fieldOfStudy", "startDate", "endDate" }` (school required, rest optional)
-- `DELETE /users/me/education/:educationId` — only the owner can delete (403 otherwise)
-
-**Experience**
-- `POST /users/me/experience` — body: `{ "title", "company", "description", "startDate", "endDate" }` (title + company required)
-- `DELETE /users/me/experience/:experienceId` — only the owner can delete (403 otherwise)
+**Posts**
+- `GET /posts?page=&limit=` — paginated feed
+- `POST /posts` — multipart, fields `content` + optional `image`
+- `GET /posts/:postId`, `PUT /posts/:postId` (owner only), `DELETE /posts/:postId` (owner only)
+- `POST/DELETE /posts/:postId/like`, `POST /posts/:postId/share`
+- `GET /posts/:postId/comments?page=&limit=`, `POST /posts/:postId/comments`
 
 **Notifications**
-- `GET /notifications?page=1&limit=20` — returns `{ notifications, unreadCount, page, limit, total, totalPages }`
-- `PATCH /notifications/:id/read` — only the recipient can mark their own notification as read (403 otherwise)
-- `PATCH /notifications/read-all` — marks all of the current user's notifications as read
+- `GET /notifications?page=&limit=` — returns `{ notifications, unreadCount, ... }`
+- `PATCH /notifications/:id/read`, `PATCH /notifications/read-all`
 
-Notification types (auto-created, sender never notified about their own action): `CONNECTION_REQUEST`, `CONNECTION_ACCEPTED`, `POST_LIKE`, `POST_COMMENT`.
+**Conversations & Messages**
+- `POST /conversations` — body `{ userId }`, starts or reuses a 1:1 conversation
+- `GET /conversations` — list with last message
+- `GET /conversations/:id/messages?page=&limit=`, `POST /conversations/:id/messages`
 
-**Conversations & Messages** (1:1 only; REST, no WebSockets)
-- `POST /conversations` — body: `{ "userId" }`; starts a conversation or returns the existing one between the two users
-- `GET /conversations` — the current user's conversations with `otherUser` + `lastMessage`
-- `GET /conversations/:id/messages?page=1&limit=20` — only participants can read (403 otherwise)
-- `POST /conversations/:id/messages` — body: `{ "content" }`; only participants can send (403 otherwise)
+All error responses use the shape `{ "message": "..." }` with a matching HTTP status (400 validation, 401 auth, 403 authorization, 404 not found, 409 conflict/duplicate, 500 unexpected).
 
-**Posts** (minimal — backend only, no feed UI yet; exists to support like/comment notifications)
-- `POST /posts` — body: `{ "content" }`
-- `POST /posts/:postId/like` / `DELETE /posts/:postId/like`
-- `POST /posts/:postId/comments` — body: `{ "content" }`
+## 12. Feature Checklist
 
-### Manual API testing (curl example)
+| Area | Status |
+|---|---|
+| Register / Login / Logout | ✅ |
+| JWT auth + protected routes | ✅ |
+| Password hashing (bcrypt) | ✅ |
+| View / edit profile, profile picture | ✅ |
+| Skills / Education / Experience (add, delete own, view) | ✅ |
+| Profile stats (connections, posts) | ✅ |
+| Search users (name/headline/skill, paginated) | ✅ |
+| Send / accept / reject / remove connection | ✅ |
+| Live connection status on profile | ✅ |
+| Follow / unfollow | ✅ |
+| Create / edit / delete own post | ✅ |
+| Post images | ✅ |
+| Feed (paginated) | ✅ |
+| Likes (no duplicates) | ✅ |
+| Comments (paginated) | ✅ |
+| Share (link copy + share count) | ✅ |
+| Notifications (request, accept, like, comment) | ✅ |
+| Messaging (conversations, messages, authorization) | ✅ |
 
-```bash
-TOKEN=$(curl -s -X POST http://localhost:5000/api/auth/login \
-  -H "Content-Type: application/json" \
-  -d '{"email":"alice@example.com","password":"password123"}' | node -pe 'JSON.parse(require("fs").readFileSync(0)).token')
+## 13. How to Manually Test the Application
 
-curl -s http://localhost:5000/api/users/1 -H "Authorization: Bearer $TOKEN"
+### Quick evaluator demo flow
 
-curl -s -X PUT http://localhost:5000/api/users/me \
-  -H "Authorization: Bearer $TOKEN" -H "Content-Type: application/json" \
-  -d '{"headline":"New headline"}'
-```
+1. **Register or log in** — open http://localhost:5173, either register a new account or log in as `alice@example.com` / `password123`.
+2. **View profile** — click your name in the navbar to see the profile page (skills, education, experience, connection/post counts).
+3. **Search another user** — click **Search**, type `bob` or `designer` or `react`.
+4. **Send a connection request** — from the search results or Bob's profile, click **Connect**.
+5. **Log in as another user** — log out, log in as `bob@example.com` / `password123`.
+6. **Accept the connection** — open **My Network → Requests**, click **Accept**.
+7. **Create a post** — on the home feed, type an update (optionally attach an image) and click **Post**.
+8. **Like the post** — as a different user, click **Like** on a feed post.
+9. **Comment** — click **Comment**, type a reply, click **Send**.
+10. **View notification** — the bell icon shows an unread badge; open it to see "X liked/commented on your post."
+11. **Send a message** — from a user's profile click **Message**, or open **Messages**, type and **Send**.
+12. **View feed** — the home page (`/`) shows the paginated post feed with like/comment/share counts.
+
+### Additional checks worth trying
+
+- Try to edit/delete another user's post, skill, education, or experience entry — should be blocked with a 403-driven error message in the UI.
+- Send the same connection request twice — second attempt is rejected as a duplicate.
+- Like the same post twice — second attempt is rejected as a duplicate.
+- Log out and try to visit `/` directly — redirected to `/login` (protected route).
+- Submit the register form with a bad email or a password under 6 characters — inline validation error, no request sent for empty fields.
+
+## 14. Known Limitations
+
+- Messaging and notifications are REST-based (polled), not real-time — no WebSockets, as scoped for this MVP.
+- "Share" copies a link and increments a share counter; it does not create a repost in the feed.
+- Posts are a single global feed (not filtered to your network) — this keeps the MVP simple for demo purposes.
+- No pagination on skills/education/experience lists (they're expected to stay small per profile).
+- No password reset / email verification flow.
+- No rate limiting — not needed for a local competition demo.

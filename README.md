@@ -1,6 +1,16 @@
 # LinkedIn Clone MVP
 
-A minimal LinkedIn-style application built for a time-limited coding competition.
+A LinkedIn-style social/professional networking app built for a time-limited coding competition.
+
+## Features
+
+- Authentication (register, login, JWT, protected routes)
+- Profiles (edit, profile picture, skills, education, experience, stats)
+- Connections (search, request, accept/reject, remove, live status)
+- Follow / unfollow (independent of connections)
+- Posts (create, edit, delete, image upload, feed, like, comment, share)
+- Notifications (connection requests/accepts, likes, comments)
+- 1:1 messaging (REST-based conversations)
 
 ## Stack
 
@@ -20,4 +30,4 @@ A minimal LinkedIn-style application built for a time-limited coding competition
   requirements.txt
 ```
 
-See [instruction.md](./instruction.md) for full setup, run, and testing instructions.
+See [instruction.md](./instruction.md) for full setup, run, and testing instructions — including the demo accounts and a step-by-step evaluator walkthrough.
