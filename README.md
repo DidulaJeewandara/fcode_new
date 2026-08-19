@@ -2,6 +2,11 @@
 
 A LinkedIn-style social/professional networking app built for a time-limited coding competition.
 
+
+## assumptions
+   must be similar to the mvp of linkden
+   node.js and react will be better 
+   have to implement first what is needed 
 ## Features
 
 - Authentication (register, login, JWT, protected routes)
