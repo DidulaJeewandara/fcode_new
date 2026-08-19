@@ -1,0 +1,827 @@
+*******************************************************************************************************************prompt 1
+
+I am building a LinkedIn Clone MVP for a 2-hour coding competition.
+
+I currently have an EMPTY folder opened in VS Code.
+
+Use this technology stack:
+
+Frontend:
+- React
+- Vite
+- JavaScript
+- Tailwind CSS
+
+Backend:
+- Node.js
+- Express.js
+- JavaScript
+
+Database:
+- SQLite
+- Prisma ORM
+
+Authentication:
+- JWT
+- bcrypt
+
+Architecture:
+- frontend/ for React
+- backend/ for Express API
+- REST APIs
+- SQLite database
+- Prisma ORM
+
+IMPORTANT:
+This is a time-limited coding competition. Prefer a simple, clean, reliable implementation over overengineering.
+
+First inspect the empty directory and then create the complete project foundation.
+
+Create this structure:
+
+/
+  frontend/
+  backend/
+  README.md
+  instruction.md
+  requirements.txt
+  .gitignore
+
+Backend should contain a clean structure similar to:
+
+backend/
+  src/
+    controllers/
+    routes/
+    middleware/
+    services/
+    utils/
+    app.js
+    server.js
+  prisma/
+    schema.prisma
+  uploads/
+
+Frontend should contain a clean React structure.
+
+Set up:
+- React + Vite
+- Tailwind CSS
+- Express
+- Prisma
+- SQLite
+- JWT authentication
+- bcrypt
+- CORS
+- dotenv
+- multer for future image uploads
+
+Create the initial Prisma schema with these core entities:
+
+User:
+- id
+- name
+- email
+- password
+- profilePicture
+- headline
+- bio
+- location
+- createdAt
+- updatedAt
+
+Also prepare relationships needed later for:
+- skills
+- education
+- experience
+- connections
+- posts
+- likes
+- comments
+- follows
+- notifications
+- conversations
+- messages
+
+Do not overcomplicate the schema.
+
+Implement:
+
+POST /api/auth/register
+POST /api/auth/login
+GET /api/auth/me
+
+Password must be hashed with bcrypt.
+
+Login should return a JWT.
+
+Create authentication middleware that validates the JWT.
+
+Create frontend:
+- Login page
+- Register page
+- Basic navigation
+- Authentication context
+- Protected routes
+- Logout functionality
+
+The frontend should communicate with the backend using Axios.
+
+Create a clean API configuration so frontend API calls use one base URL.
+
+Add useful error handling.
+
+Create seed data with at least 3 demo users so the application can be tested easily.
+
+Create instruction.md containing:
+1. Prerequisites
+2. Installation
+3. Database setup
+4. How to start backend
+5. How to start frontend
+6. Demo login credentials
+7. API base URL
+8. Basic testing instructions
+
+Create requirements.txt listing the important runtime/dependency requirements, but keep package.json as the actual Node dependency management file.
+
+Do NOT implement advanced features yet.
+
+After completing this task:
+1. Install dependencies.
+2. Run Prisma migrations.
+3. Seed the database.
+4. Start backend and frontend if possible.
+5. Fix any errors.
+6. Give me a concise summary of what was created and exact commands to run the project.
+
+Do not wait for further confirmation. Implement the foundation now.
+
+
+
+********************************************************************************************************************prompt 2
+
+Continue building the LinkedIn Clone MVP from the existing project.
+
+Do NOT rewrite or break the existing authentication system.
+
+Now implement the User Profile feature.
+
+Users must be able to:
+
+1. View their own profile
+2. View another user's profile
+3. Edit their own profile
+
+Profile fields:
+
+- Profile picture
+- Name
+- Headline
+- About/Bio
+- Location
+
+Implement:
+
+GET /api/users/:id
+PUT /api/users/me
+
+Also implement profile image upload using multer and local storage.
+
+Create:
+
+POST /api/users/me/profile-picture
+
+Serve uploaded files statically from the backend.
+
+Implement Skills.
+
+A user can:
+- Add a skill
+- Delete their own skill
+- View another user's skills
+
+Implement Education.
+
+A user can:
+- Add education
+- Delete education
+- View education on a profile
+
+Implement Work Experience.
+
+A user can:
+- Add experience
+- Delete experience
+- View experience on a profile
+
+Keep the database design simple.
+
+Add these frontend pages/components:
+
+- ProfilePage
+- EditProfile
+- Skills section
+- Education section
+- Experience section
+
+The profile page should look like a simplified LinkedIn profile.
+
+Show:
+- Profile picture
+- Name
+- Headline
+- Location
+- About
+- Skills
+- Education
+- Experience
+- Connection count
+- Post count
+
+Allow clicking another user to open their profile.
+
+Add proper authorization:
+- A user can only edit their own profile.
+- A user cannot delete another user's skills/education/experience.
+
+Keep UI clean and responsive.
+
+After implementation:
+- Run Prisma migration if needed.
+- Test all APIs.
+- Test frontend.
+- Fix errors.
+- Update instruction.md with the new endpoints and testing instructions.
+
+Do not implement connections/posts yet.
+
+
+********************************************************************************prompt 3
+
+Continue from the existing LinkedIn Clone project.
+
+Do NOT break authentication or profile functionality.
+
+Now implement Connections, Follow/Unfollow, and User Search.
+
+CONNECTION SYSTEM
+
+A connection request should have a status:
+
+- PENDING
+- ACCEPTED
+- REJECTED
+
+Implement:
+
+POST /api/connections/:userId
+
+Send connection request.
+
+PATCH /api/connections/:requestId/accept
+
+Accept request.
+
+PATCH /api/connections/:requestId/reject
+
+Reject request.
+
+DELETE /api/connections/:userId
+
+Remove an existing connection.
+
+GET /api/connections
+
+Return the current user's connections.
+
+GET /api/connections/requests
+
+Return pending incoming connection requests.
+
+Also implement a useful endpoint:
+
+GET /api/users/:userId/connection-status
+
+Return one of:
+
+NOT_CONNECTED
+PENDING
+CONNECTED
+SELF
+
+Make sure duplicate connection requests cannot be created.
+
+A user should not be able to connect with themselves.
+
+FOLLOW SYSTEM
+
+Implement:
+
+POST /api/users/:userId/follow
+DELETE /api/users/:userId/follow
+GET /api/users/:userId/followers
+GET /api/users/:userId/following
+
+Following is independent from connections.
+
+USER SEARCH
+
+Implement:
+
+GET /api/users/search?q=
+
+Search users by:
+
+- name
+- headline
+- skills
+
+Return useful profile information.
+
+Add pagination:
+
+?page=1&limit=10
+
+FRONTEND
+
+Create:
+
+- Search page / search bar
+- Search results
+- Connect button
+- Pending button
+- Connected button
+- Accept request button
+- Reject request button
+- Follow / Unfollow button
+- Connections page
+- Connection requests section
+
+On another user's profile show the correct relationship state.
+
+Make the UI intuitive:
+
+Connect
+Pending
+Connected
+
+The current user should never see a Connect button for themselves.
+
+Make sure the database relationships are correct and avoid unnecessary queries.
+
+After implementation:
+- Run migrations.
+- Test with the seeded users.
+- Test sending, accepting, rejecting and removing connections.
+- Test following.
+- Test search.
+- Test pagination.
+- Fix any bugs.
+- Update instruction.md.
+
+Do not implement posts yet.
+
+
+
+
+**********************************prompt 4******************************
+
+Continue building the existing LinkedIn Clone.
+
+Do NOT break authentication, profiles, connections, follow, or search.
+
+Now implement the Feed/Post system.
+
+POST
+
+Users can:
+
+- Create a post
+- Edit their own post
+- Delete their own post
+- View a single post
+
+A post contains:
+
+- text
+- optional image
+- author
+- createdAt
+- updatedAt
+
+Implement:
+
+POST /api/posts
+GET /api/posts/:id
+PUT /api/posts/:id
+DELETE /api/posts/:id
+
+Use multer for optional post image upload.
+
+LIKES
+
+Implement:
+
+POST /api/posts/:postId/like
+DELETE /api/posts/:postId/like
+
+Each user can only like a post once.
+
+The API response should include:
+
+likeCount
+likedByCurrentUser
+
+COMMENTS
+
+Implement:
+
+POST /api/posts/:postId/comments
+GET /api/posts/:postId/comments
+DELETE /api/comments/:commentId
+
+Users can delete only their own comments.
+
+Include:
+
+commentCount
+
+Add pagination to comments.
+
+FEED
+
+Implement:
+
+GET /api/feed?page=1&limit=10
+
+The feed should contain:
+
+- current user's posts
+- posts from accepted connections
+
+Order by newest first.
+
+Do NOT simply SELECT * from all posts.
+
+Use the database relationships to determine which posts belong in the feed.
+
+POST SHARING
+
+Implement basic post sharing.
+
+A user should be able to share another user's post.
+
+A shared post should preserve a reference to the original post.
+
+Example:
+
+John shared Jane's post.
+
+Do not duplicate the original post content unnecessarily.
+
+FEED UI
+
+Create:
+
+Home page
+Post creation form
+Post card
+Like button
+Comment button
+Comment section
+Share button
+Delete/edit controls for own posts
+
+Display:
+
+Profile picture
+Name
+Headline
+Post text
+Post image
+Timestamp
+Like count
+Comment count
+Like state
+
+Add infinite scroll only if it is extremely simple.
+
+Otherwise use "Load More" pagination.
+
+Make the UI visually polished but don't spend excessive time on animations.
+
+After implementation:
+- Run migrations.
+- Test creating posts.
+- Test editing/deleting own posts.
+- Verify users cannot edit/delete other users' posts.
+- Test likes/unlikes.
+- Test comments.
+- Test feed filtering based on connections.
+- Test sharing.
+- Test pagination.
+- Fix errors.
+
+Update instruction.md with all new endpoints.
+
+
+
+**********************************************prompt 5*********************************
+Continue from the existing LinkedIn Clone project.
+
+Do NOT break existing functionality.
+
+Now implement Notifications and basic one-to-one Messaging.
+
+NOTIFICATIONS
+
+Create a Notification model.
+
+A notification should contain:
+
+- id
+- recipientId
+- senderId
+- type
+- message
+- relatedId
+- read
+- createdAt
+
+Notification types:
+
+CONNECTION_REQUEST
+CONNECTION_ACCEPTED
+POST_LIKE
+POST_COMMENT
+
+Automatically create notifications when:
+
+1. Someone sends a connection request.
+2. Someone accepts a connection request.
+3. Someone likes another user's post.
+4. Someone comments on another user's post.
+
+Do not create a notification when a user likes their own post.
+
+Implement:
+
+GET /api/notifications
+PATCH /api/notifications/:id/read
+PATCH /api/notifications/read-all
+
+Add pagination if simple.
+
+FRONTEND:
+
+Create a notification dropdown/page.
+
+Show examples such as:
+
+Jane Smith sent you a connection request.
+John Doe accepted your connection request.
+Jane Smith liked your post.
+John Doe commented on your post.
+
+Display unread notifications differently.
+
+MESSAGING
+
+Implement basic one-to-one messaging using REST APIs.
+
+Do NOT implement WebSockets or real-time messaging.
+
+Create:
+
+Conversation
+Message
+
+Implement:
+
+POST /api/conversations
+
+Start a conversation with another user.
+
+GET /api/conversations
+
+Get current user's conversations.
+
+GET /api/conversations/:id/messages?page=1&limit=20
+
+Get conversation messages.
+
+POST /api/conversations/:id/messages
+
+Send a message.
+
+Authorization must ensure users can only access conversations they belong to.
+
+FRONTEND:
+
+Create a Messages page.
+
+Show:
+
+- Conversation list
+- Selected conversation
+- Message history
+- Message input
+- Send button
+
+Keep it simple.
+
+Add a link/icon for Notifications and Messages in the main navigation.
+
+After implementation:
+- Test notifications for every required event.
+- Test messaging between two users.
+- Test authorization.
+- Fix errors.
+- Update instruction.md.
+
+
+***************************************prompt 6*********************************
+
+This is the FINAL stabilization phase of my LinkedIn Clone MVP.
+
+Do NOT add large new features.
+
+Review the entire existing project as if you are a senior software engineer reviewing a coding interview submission.
+
+The goal is to make the application reliable and easy for an evaluator to run.
+
+Check all existing functionality:
+
+AUTHENTICATION
+- Register
+- Login
+- Logout
+- JWT authentication
+- Password hashing
+- Protected routes
+
+PROFILE
+- View profile
+- Edit profile
+- Profile picture
+- Skills
+- Education
+- Experience
+- Statistics
+
+CONNECTIONS
+- Search users
+- Send request
+- Accept
+- Reject
+- Remove connection
+- Connection status
+
+FOLLOW
+- Follow
+- Unfollow
+
+POSTS
+- Create
+- Edit own post
+- Delete own post
+- Feed
+- Post images
+- Likes
+- Comments
+- Sharing
+
+NOTIFICATIONS
+- Connection requests
+- Accepted connections
+- Likes
+- Comments
+
+MESSAGING
+- Conversations
+- Messages
+- Authorization
+
+PAGINATION
+- Feed
+- Search
+- Comments
+- Connections where implemented
+
+Now perform a complete code review.
+
+Check for:
+
+- Broken API routes
+- Incorrect Prisma relations
+- Authentication vulnerabilities
+- Missing authorization checks
+- Duplicate likes
+- Duplicate connections
+- Users modifying other users' data
+- Invalid request validation
+- Empty input handling
+- Database errors
+- Missing error responses
+- Frontend API errors
+- Loading states
+- Empty states
+- Broken navigation
+- CORS issues
+- Environment variable issues
+- Image upload issues
+
+Use appropriate HTTP status codes.
+
+Make API responses consistent.
+
+Add simple validation for:
+- email
+- password
+- required fields
+- post text
+- comments
+- messages
+
+Do not over-engineer validation.
+
+Create/update:
+
+README.md
+instruction.md
+requirements.txt
+.env.example
+
+instruction.md MUST contain:
+
+1. Project overview
+2. Technology stack
+3. Prerequisites
+4. Installation commands
+5. Environment variables
+6. Database setup
+7. Seed database
+8. Start backend
+9. Start frontend
+10. Demo accounts
+11. API overview
+12. Feature checklist
+13. How to manually test the application
+14. Known limitations
+
+requirements.txt should clearly list the required runtime/development dependencies and tools, while package.json remains the actual Node dependency manager.
+
+Create a final demo flow for the evaluator:
+
+1. Register/login
+2. View profile
+3. Search another user
+4. Send connection request
+5. Login as another user
+6. Accept connection
+7. Create a post
+8. Like the post
+9. Comment
+10. View notification
+11. Send a message
+12. View feed
+
+Seed enough demo data to make the application look populated.
+
+Make the UI look professional enough for a coding competition:
+- clean navigation
+- responsive layout
+- consistent spacing
+- cards
+- buttons
+- loading states
+- empty states
+- error messages
+
+Do not spend time on advanced animations.
+
+Finally:
+
+1. Install all dependencies.
+2. Run Prisma migrations.
+3. Seed database.
+4. Start backend.
+5. Start frontend.
+6. Test the critical user flow.
+7. Fix all errors you find.
+8. Verify there are no obvious console errors.
+9. Give me the exact commands I need to run the application from a fresh terminal.
+
+DO NOT rewrite working functionality unnecessarily.
+Prioritize stability over adding features.
+
+
+
+
+*****************prompt 7***************
+
+photo submitting is not working,cant implement a single photo to sent ..edit the function
+
+
+
