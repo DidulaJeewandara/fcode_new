@@ -1,0 +1,29 @@
+# This project is Node.js based. package.json (frontend/ and backend/) is the
+# authoritative dependency manifest. This file lists the important
+# runtime/tooling requirements for reference.
+
+# Runtime
+node >= 18.x
+npm >= 9.x
+
+# Backend
+express ^4.21.0
+@prisma/client ^5.20.0
+prisma ^5.20.0 (dev)
+sqlite3 (bundled via Prisma SQLite driver)
+bcrypt ^5.1.1
+jsonwebtoken ^9.0.2
+cors ^2.8.5
+dotenv ^16.4.5
+multer ^1.4.5-lts.1
+nodemon ^3.1.4 (dev)
+
+# Frontend
+react ^19.x
+react-dom ^19.x
+react-router-dom ^6.26.2
+axios ^1.7.7
+vite ^8.x
+tailwindcss ^3.4.13
+postcss ^8.4.47
+autoprefixer ^10.4.20

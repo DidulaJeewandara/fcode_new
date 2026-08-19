@@ -1,0 +1,28 @@
+node_modules/
+dist/
+build/
+
+# env
+.env
+!.env.example
+
+# db
+backend/prisma/*.db
+backend/prisma/*.db-journal
+backend/prisma/migrations/dev.db
+
+# uploads
+backend/uploads/*
+!backend/uploads/.gitkeep
+
+# logs
+*.log
+npm-debug.log*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# editor
+.vscode/*
+!.vscode/extensions.json
